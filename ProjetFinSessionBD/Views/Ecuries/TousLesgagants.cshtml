@@ -1,0 +1,25 @@
+﻿@model List<ProjetFinSessionBD.Models.VwGagnatDevenement>
+
+<h1>Tous les gagnants</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nom de l'évênement</th>
+            <th>Circuit</th>
+            <th>Gagnant du GP</th>
+            <th>L'organisation</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NomDeLÉvênement</td>
+                <td>@item.Circuit</td>
+                <td>@item.GagnantDuGp</td>
+                <td>@item.LOrganisation</td>
+            </tr>
+        }
+    </tbody>
+</table>

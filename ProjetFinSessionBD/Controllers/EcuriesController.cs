@@ -59,6 +59,13 @@ namespace ProjetFinSessionBD.Controllers
             return View(ecurieViewModel);
         }
 
+        //GET : Ecuries/TousLesGagants
+        public async Task<IActionResult> TousLesGagants()
+        {
+            var gagnants = await _context.VwGagnatDevenements.ToListAsync();
+            return View(gagnants);
+        }
+
         // GET: Ecuries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
