@@ -26,6 +26,7 @@ namespace ProjetFinSessionBD.Data
         public virtual DbSet<Participation> Participations { get; set; } = null!;
         public virtual DbSet<Pilote> Pilotes { get; set; } = null!;
         public virtual DbSet<Sponsor> Sponsors { get; set; } = null!;
+        public virtual DbSet<VwGagnatDevenement> VwGagnatDevenements { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -99,6 +100,11 @@ namespace ProjetFinSessionBD.Data
                     .HasForeignKey(d => d.EcurieId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Participations_EcurieID");
+            });
+
+            modelBuilder.Entity<VwGagnatDevenement>(entity =>
+            {
+                entity.ToView("vw_GagnatDevenement", "Participations");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjetFinSessionBD.Models.Ecurie>
+﻿@model List<ProjetFinSessionBD.Models.ViewModel.EcurieViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,35 +14,36 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nom)
+                Team Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Victoire)
+                Victories
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Sponsor)
+                Pilotes
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Victoire)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sponsor.SponsorId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.EcurieId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.EcurieId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.EcurieId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var ecurie in Model)
+        {
+            <tr>
+                <td>
+                    @ecurie.Name
+                </td>
+                <td>
+                    @ecurie.Victoires
+                </td>
+                <td>
+                    <ul>
+                        @foreach (var pilote in ecurie.pilotes)
+                        {
+                            <li>@pilote.Name - Victoires: @pilote.Victoires</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

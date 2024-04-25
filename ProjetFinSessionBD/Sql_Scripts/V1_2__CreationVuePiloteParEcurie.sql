@@ -1,9 +1,14 @@
 ﻿USE Formule1
 GO
 
-CREATE VIEW Participations.vw_EcurieEtPilote 
-AS
-	SELECT E.Nom AS [NomEcurie], P.Nom AS [NomPilote], P.Points, P.NBVictoire, E.EcurieID, P.PiloteID
-	FROM Participations.Ecurie E
-	INNER JOIN Participations.Pilote P ON P.EcurieID = E.EcurieID
+CREATE VIEW Participations.vw_GagnatDevenement
+AS 
+	SELECT E.Nom AS [Nom de l'évênement], C.Nom AS [Circuit], GP.Gagnant AS [Gagnant du GP], ES.Organisation AS [L'organisation], E.EvenementID, GP.GrandPrixID, ES.EvenSpecialID, C.CircuitId
+	FROM Evenements.Evenement E
+	INNER JOIN Evenements.GrandPrix GP
+	ON GP.GrandPrixID = E.GrandPrixId
+	INNER JOIN Evenements.EvenementSpecial ES
+	ON ES.EvenSpecialID = E.EvenSpecialID
+	INNER JOIN Evenements.Circuit C
+	ON C.CircuitId = E.CircuitId
 GO

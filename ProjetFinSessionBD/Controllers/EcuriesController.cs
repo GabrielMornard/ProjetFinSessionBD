@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjetFinSessionBD.Data;
 using ProjetFinSessionBD.Models;
+using ProjetFinSessionBD.Models.ViewModel;
 
 namespace ProjetFinSessionBD.Controllers
 {
@@ -22,8 +23,40 @@ namespace ProjetFinSessionBD.Controllers
         // GET: Ecuries
         public async Task<IActionResult> Index()
         {
-            var formule1Context = _context.Ecuries.Include(e => e.Sponsor);
-            return View(await formule1Context.ToListAsync());
+                var ecuries = await _context.Ecuries.ToListAsync();
+
+                if (ecuries == null) 
+                {
+                    return NotFound("Aucune Écurie de trouver!");
+                }
+
+                var ecurieViewModel = new List<EcurieViewModel>();
+
+                foreach (var ecurie in ecuries)
+                {
+                    var ecurieVM = new EcurieViewModel
+                    {
+                        Name = ecurie.Nom,
+                        Victoires = ecurie.Victoire,
+                        pilotes = new List<PiloteViewModel>()
+                    };
+
+                    var pilotes = await _context.Pilotes.Where(x => x.EcurieId == ecurie.EcurieId).ToListAsync();
+
+                    foreach (var pilote in pilotes) 
+                    {
+                        var piloteVM = new PiloteViewModel
+                        {
+                            Name = pilote.Nom,
+                            Victoires = pilote.Nbvictoire
+                        };
+
+                        ecurieVM.pilotes.Add(piloteVM);
+                    }
+                    ecurieViewModel.Add(ecurieVM);
+                }
+
+            return View(ecurieViewModel);
         }
 
         // GET: Ecuries/Details/5
