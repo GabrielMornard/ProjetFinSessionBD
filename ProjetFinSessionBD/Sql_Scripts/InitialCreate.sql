@@ -1,0 +1,38 @@
+﻿USE MASTER
+GO
+
+--Création de la Base de Données
+IF EXISTS(SELECT * FROM sys.databases WHERE name = 'Formule1')
+BEGIN
+	DROP DATABASE Formule1
+END
+
+CREATE DATABASE Formule1
+GO
+
+USE Formule1
+GO
+
+-- Configuration de FILESTREAM
+EXEC sp_configure filestream_access_level, 2 RECONFIGURE
+
+ALTER DATABASE Formule1
+ADD FILEGROUP FG_Images2239424 CONTAINS FILESTREAM;
+GO
+ALTER DATABASE Formule1
+ADD FILE(
+	NAME = FG_Images2239424,
+	FILENAME = 'C:\EspaceLabo\FG_Images2239424'
+)
+TO FILEGROUP FG_Images2239424
+GO
+
+-- Configuration des clés symétriques
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'P4ssw0rd!12345';
+GO
+
+CREATE CERTIFICATE MonCertificat WITH SUBJECT = 'ChiffrementMDP'
+GO
+
+CREATE SYMMETRIC KEY MaSuperCle WITH ALGORITHM = AES_256 ENCRYPTION BY CERTIFICATE MonCertificat;
+GO
