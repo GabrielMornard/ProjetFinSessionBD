@@ -26,7 +26,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Pilotes}/{action=Index}"
+        pattern: "{controller=Ecuries}/{action=Index}"
         );
 });
 
