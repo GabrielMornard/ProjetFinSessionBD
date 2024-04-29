@@ -22,7 +22,7 @@ namespace ProjetFinSessionBD.Controllers
         // GET: Pilotes
         public async Task<IActionResult> Index()
         {
-            var formule1Context = _context.Pilotes.Include(p => p.Ecurie);
+            var formule1Context = _context.Pilotes.Include(p => p.Ecurie).OrderBy(x => x.Nom);
             return View(await formule1Context.ToListAsync());
         }
 
