@@ -48,7 +48,8 @@ namespace ProjetFinSessionBD.Controllers
                         var piloteVM = new PiloteViewModel
                         {
                             Name = pilote.Nom,
-                            Victoires = pilote.Nbvictoire
+                            Victoires = pilote.Nbvictoire,
+                            Id = pilote.PiloteId
                         };
 
                         ecurieVM.pilotes.Add(piloteVM);

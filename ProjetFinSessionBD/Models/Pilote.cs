@@ -12,6 +12,7 @@ namespace ProjetFinSessionBD.Models
         public Pilote()
         {
             Participations = new HashSet<Participation>();
+            Transactions = new HashSet<Transaction>();
         }
 
         [Key]
@@ -30,5 +31,7 @@ namespace ProjetFinSessionBD.Models
         public virtual Ecurie Ecurie { get; set; } = null!;
         [InverseProperty("Pilote")]
         public virtual ICollection<Participation> Participations { get; set; }
+        [InverseProperty("Pilote")]
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

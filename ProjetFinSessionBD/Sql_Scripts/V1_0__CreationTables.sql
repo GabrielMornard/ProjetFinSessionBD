@@ -43,6 +43,16 @@ CREATE TABLE Evenements.Circuit(
 )
 GO
 
+--Création de la table Transaction dans le Schema Participations
+CREATE TABLE Participations.Transactions(
+	TransactionID int IDENTITY(1,1) NOT NULL,
+	Montant int NOT NULL,
+	piloteId int NOT NULL,
+	EcurieId int NOT NULL
+	CONSTRAINT PK_Participations_Transaction PRIMARY KEY (TransactionID)
+)
+GO
+
 -- Création de la table Participation dans le Schema Participations
 CREATE TABLE Participations.Participation(
 	ParticipationId int IDENTITY(1,1) NOT NULL,
@@ -88,6 +98,18 @@ GO
 ALTER TABLE Participations.Ecurie ADD CONSTRAINT FK_Participations_SponsorID
 FOREIGN KEY (sponsorID)
 REFERENCES Participations.Sponsor(SponsorID)
+GO
+
+--Clée étrangère PiloteID dans la table Participations.Transactions
+ALTER TABLE Participations.Transactions ADD CONSTRAINT FK_Participations_Transactions_PiloteId
+FOREIGN KEY (PiloteID)
+REFERENCES Participations.Pilote(PiloteID)
+GO
+
+--Clée étrangère PiloteID dans la table Participations.Transactions
+ALTER TABLE Participations.Transactions ADD CONSTRAINT FK_Participations_Transactions_EcurieID
+FOREIGN KEY (EcurieID)
+REFERENCES Participations.Ecurie(EcurieID)
 GO
 
 --Clée étrangère Ecurie dans la table Participations.Pilote
