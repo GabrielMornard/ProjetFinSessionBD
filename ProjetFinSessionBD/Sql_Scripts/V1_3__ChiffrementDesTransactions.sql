@@ -2,7 +2,9 @@
 GO
 
 CREATE PROCEDURE Participations.USP_ChiffrementTransactions
-	@Montant char(30)
+	@Montant char(30),
+	@PiloteId int,
+	@EcurieId int
 AS
 BEGIN
 
@@ -14,8 +16,8 @@ BEGIN
 	CLOSE SYMMETRIC KEY MaSuperCle;
 
 	--INSERTION
-	INSERT INTO Participation.Transactions (Montant)
+	INSERT INTO Participations.Transactions (Montant, piloteId, EcurieId)
 	VALUES
-	(@MontantChiffre);
+	(@MontantChiffre, @PiloteId, @EcurieId);
 END
 GO

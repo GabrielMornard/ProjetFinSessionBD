@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using ProjetFinSessionBD.Data;
 using ProjetFinSessionBD.Models;
@@ -24,9 +25,34 @@ namespace ProjetFinSessionBD.Controllers
         // GET: Transactions
         public async Task<IActionResult> Index()
         {
-            var formule1Context = _context.Transactions.Include(t => t.Ecurie).Include(t => t.Pilote);
-            return View(await formule1Context.ToListAsync());
+            List<TransactionViewModel> decryptedTransactions = new List<TransactionViewModel>();
+
+            foreach (var transaction in _context.Transactions)
+            {
+                string query = "EXEC Participations.USP_DechiffrementTransactions @TransactionId";
+
+                List<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter{ParameterName = "@Montant", Value = transaction.Montant },
+                    new SqlParameter{ParameterName = "@PiloteId", Value = transaction.PiloteId },
+                    new SqlParameter{ParameterName = "@EcurieId", Value = transaction.EcurieId }
+                };
+
+                var decryptedData = await _context.Database.ExecuteSqlRawAsync(query, parameters);
+
+                TransactionViewModel decryptedTransaction = new TransactionViewModel
+                {
+                    //Montant = decryptedData.Montant,
+                    //PiloteId = decryptedData.PiloteId,
+                    //EcurieId = decryptedData.EcurieId
+                };
+
+                decryptedTransactions.Add(decryptedTransaction);
+            }
+
+            return View(decryptedTransactions);
         }
+
 
         // GET: Transactions/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -78,7 +104,16 @@ namespace ProjetFinSessionBD.Controllers
                     EcurieId = transactionViewModel.EcurieId
                 };
 
-                _context.Add(transaction);
+                string query = "EXEC Participations.USP_ChiffrementTransactions @Montant, @PiloteId, @EcurieId";
+
+                List<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter{ParameterName = "@Montant", Value = transaction.Montant },
+                    new SqlParameter{ParameterName = "@PiloteId", Value = transaction.PiloteId },
+                    new SqlParameter{ParameterName = "@EcurieId", Value = transaction.EcurieId }
+                };
+
+                await _context.Database.ExecuteSqlRawAsync(query, parameters);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
