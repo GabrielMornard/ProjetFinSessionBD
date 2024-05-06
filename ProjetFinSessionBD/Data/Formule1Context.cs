@@ -27,6 +27,7 @@ namespace ProjetFinSessionBD.Data
         public virtual DbSet<Pilote> Pilotes { get; set; } = null!;
         public virtual DbSet<Sponsor> Sponsors { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
+        public virtual DbSet<TransactionsSimplifie> TransactionsSimplifies { get; set; } = null!;
         public virtual DbSet<VwGagnatDevenement> VwGagnatDevenements { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -116,6 +117,16 @@ namespace ProjetFinSessionBD.Data
                     .HasForeignKey(d => d.PiloteId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Participations_Transactions_PiloteId");
+            });
+
+            modelBuilder.Entity<TransactionsSimplifie>(entity =>
+            {
+                entity.HasKey(e => e.TransactionId)
+                    .HasName("PK_Participations_TransactionsSimplifie");
+
+                entity.Property(e => e.TransactionId).ValueGeneratedNever();
+
+                entity.Property(e => e.Montant).IsFixedLength();
             });
 
             modelBuilder.Entity<VwGagnatDevenement>(entity =>

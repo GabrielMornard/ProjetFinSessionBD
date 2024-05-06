@@ -25,30 +25,32 @@ namespace ProjetFinSessionBD.Controllers
         // GET: Transactions
         public async Task<IActionResult> Index()
         {
-            List<TransactionViewModel> decryptedTransactions = new List<TransactionViewModel>();
+            var allTransactions = await _context.Transactions.ToListAsync();
 
-            foreach (var transaction in _context.Transactions)
+            List<TransactionsSimplifie> decryptedTransactions = new List<TransactionsSimplifie>();
+
+            foreach (var transaction in allTransactions)
             {
                 string query = "EXEC Participations.USP_DechiffrementTransactions @TransactionId";
 
-                List<SqlParameter> parameters = new List<SqlParameter>
+                var transactionIdParam = new SqlParameter("@TransactionId", transaction.TransactionId);
+
+                var decryptedResult = await _context.TransactionsSimplifies.FromSqlRaw(query, transactionIdParam).FirstOrDefaultAsync();
+
+                if (decryptedResult != null)
                 {
-                    new SqlParameter{ParameterName = "@Montant", Value = transaction.Montant },
-                    new SqlParameter{ParameterName = "@PiloteId", Value = transaction.PiloteId },
-                    new SqlParameter{ParameterName = "@EcurieId", Value = transaction.EcurieId }
-                };
+                    TransactionsSimplifie decryptedTransaction = new TransactionsSimplifie
+                    {
+                        TransactionId = decryptedResult.TransactionId,
+                        Montant = decryptedResult.Montant,
+                        EcurieId = decryptedResult.EcurieId,
+                        PiloteId = decryptedResult.PiloteId,
+                    };
 
-                var decryptedData = await _context.Database.ExecuteSqlRawAsync(query, parameters);
-
-                TransactionViewModel decryptedTransaction = new TransactionViewModel
-                {
-                    //Montant = decryptedData.Montant,
-                    //PiloteId = decryptedData.PiloteId,
-                    //EcurieId = decryptedData.EcurieId
-                };
-
-                decryptedTransactions.Add(decryptedTransaction);
+                    decryptedTransactions.Add(decryptedTransaction);
+                }
             }
+
 
             return View(decryptedTransactions);
         }
@@ -97,20 +99,14 @@ namespace ProjetFinSessionBD.Controllers
         {
             if (ModelState.IsValid)
             {
-                Transaction transaction = new Transaction
-                {
-                    Montant = transactionViewModel.Montant,
-                    PiloteId = transactionViewModel.PiloteId,
-                    EcurieId = transactionViewModel.EcurieId
-                };
-
+                
                 string query = "EXEC Participations.USP_ChiffrementTransactions @Montant, @PiloteId, @EcurieId";
 
                 List<SqlParameter> parameters = new List<SqlParameter>
                 {
-                    new SqlParameter{ParameterName = "@Montant", Value = transaction.Montant },
-                    new SqlParameter{ParameterName = "@PiloteId", Value = transaction.PiloteId },
-                    new SqlParameter{ParameterName = "@EcurieId", Value = transaction.EcurieId }
+                    new SqlParameter{ParameterName = "@Montant", Value = transactionViewModel.Montant },
+                    new SqlParameter{ParameterName = "@PiloteId", Value = transactionViewModel.PiloteId },
+                    new SqlParameter{ParameterName = "@EcurieId", Value = transactionViewModel.EcurieId }
                 };
 
                 await _context.Database.ExecuteSqlRawAsync(query, parameters);

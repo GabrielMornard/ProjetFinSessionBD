@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjetFinSessionBD.Models.Transaction>
+﻿@model List<ProjetFinSessionBD.Models.TransactionsSimplifie>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,13 +14,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Montant)
+                Montant
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Ecurie)
+                Ecurie
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Pilote)
+                Pilote
             </th>
             <th></th>
         </tr>
@@ -32,10 +32,10 @@
                 @Html.DisplayFor(modelItem => item.Montant) $
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ecurie.Nom)
+                @Html.DisplayFor(modelItem => item.EcurieId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Pilote.Nom)
+                @Html.DisplayFor(modelItem => item.PiloteId)
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.TransactionId">Details</a> |
