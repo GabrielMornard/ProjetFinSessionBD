@@ -35,16 +35,16 @@ namespace ProjetFinSessionBD.Controllers
 
                 var transactionIdParam = new SqlParameter("@TransactionId", transaction.TransactionId);
 
-                var decryptedResult = await _context.TransactionsSimplifies.FromSqlRaw(query, transactionIdParam).FirstOrDefaultAsync();
+                var decryptedResult = await _context.TransactionsSimplifies.FromSqlRaw(query, transactionIdParam).ToListAsync();
 
                 if (decryptedResult != null)
                 {
                     TransactionsSimplifie decryptedTransaction = new TransactionsSimplifie
                     {
-                        TransactionId = decryptedResult.TransactionId,
-                        Montant = decryptedResult.Montant,
-                        EcurieId = decryptedResult.EcurieId,
-                        PiloteId = decryptedResult.PiloteId,
+                        TransactionId = decryptedResult[0].TransactionId,
+                        Montant = decryptedResult[0].Montant,
+                        EcurieId = decryptedResult[0].EcurieId,
+                        PiloteId = decryptedResult[0].PiloteId,
                     };
 
                     decryptedTransactions.Add(decryptedTransaction);
