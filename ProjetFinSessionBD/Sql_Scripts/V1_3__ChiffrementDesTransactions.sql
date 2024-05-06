@@ -32,7 +32,7 @@ FOREIGN KEY (EcurieID)
 REFERENCES Participations.Ecurie(EcurieID)
 GO
 
-
+--Encryption des données
 CREATE PROCEDURE Participations.USP_ChiffrementTransactions
 	@Montant char(30),
 	@PiloteId int,
@@ -51,5 +51,27 @@ BEGIN
 	INSERT INTO Participations.Transactions (Montant, piloteId, EcurieId)
 	VALUES
 	(@MontantChiffre, @PiloteId, @EcurieId);
+END
+GO
+
+--Décryption des données
+CREATE PROCEDURE Participations.USP_DechiffrementTransactions 
+	@TransactionId int
+AS
+BEGIN
+
+	OPEN SYMMETRIC KEY MaSuperCle
+	DECRYPTION BY CERTIFICATE MonCertificat;
+
+	DECLARE @EncryptedMontant varbinary(MAX);
+
+    SELECT @EncryptedMontant = Montant FROM Participations.Transactions
+    WHERE TransactionId = @TransactionId;
+
+	SELECT TransactionID, CONVERT(char(30), DecryptByKey(@EncryptedMontant)) AS Montant, piloteId, EcurieId
+    FROM Participations.Transactions
+    WHERE TransactionId = @TransactionId;
+	
+	CLOSE SYMMETRIC KEY MaSuperCle;
 END
 GO
