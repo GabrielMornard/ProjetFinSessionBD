@@ -23,39 +23,44 @@ namespace ProjetFinSessionBD.Controllers
         // GET: Ecuries
         public async Task<IActionResult> Index()
         {
-                var ecuries = await _context.Ecuries.ToListAsync();
+            var ecuries = await _context.Ecuries.ToListAsync();
 
-                if (ecuries == null) 
+            if (ecuries == null)
+            {
+                return NotFound("Aucune Écurie de trouver!");
+            }
+
+            var ecurieViewModel = new List<EcurieViewModel>();
+
+            foreach (var ecurie in ecuries)
+            {
+
+                var ecurieVM = new EcurieViewModel
                 {
-                    return NotFound("Aucune Écurie de trouver!");
-                }
+                    EcurieId = ecurie.EcurieId,
+                    Name = ecurie.Nom,
+                    Victoires = ecurie.Victoire,
+                    pilotes = new List<PiloteViewModel>(),
+                    //image = _context.Images.Where(x => x.ImageId == ecurie.EcurieId)
+                    //                .Select(x => x.FichierImage == null ? null : $"data:image/png;base64,{Convert.ToBase64String(x.FichierImage)}")
+                    //                .FirstOrDefault()
+                };
+                var pilotes = await _context.Pilotes.Where(x => x.EcurieId == ecurie.EcurieId).ToListAsync();
 
-                var ecurieViewModel = new List<EcurieViewModel>();
-
-                foreach (var ecurie in ecuries)
+                foreach (var pilote in pilotes)
                 {
-                    var ecurieVM = new EcurieViewModel
+                    var piloteVM = new PiloteViewModel
                     {
-                        Name = ecurie.Nom,
-                        Victoires = ecurie.Victoire,
-                        pilotes = new List<PiloteViewModel>()
+                        Name = pilote.Nom,
+                        Victoires = pilote.Nbvictoire,
+                        Id = pilote.PiloteId
                     };
 
-                    var pilotes = await _context.Pilotes.Where(x => x.EcurieId == ecurie.EcurieId).ToListAsync();
-
-                    foreach (var pilote in pilotes) 
-                    {
-                        var piloteVM = new PiloteViewModel
-                        {
-                            Name = pilote.Nom,
-                            Victoires = pilote.Nbvictoire,
-                            Id = pilote.PiloteId
-                        };
-
-                        ecurieVM.pilotes.Add(piloteVM);
-                    }
-                    ecurieViewModel.Add(ecurieVM);
+                    ecurieVM.pilotes.Add(piloteVM);
                 }
+
+                ecurieViewModel.Add(ecurieVM);
+            }
 
             return View(ecurieViewModel);
         }

@@ -11,6 +11,7 @@ namespace ProjetFinSessionBD.Models
     {
         public Ecurie()
         {
+            Images = new HashSet<Image>();
             Participations = new HashSet<Participation>();
             Pilotes = new HashSet<Pilote>();
             Transactions = new HashSet<Transaction>();
@@ -28,6 +29,8 @@ namespace ProjetFinSessionBD.Models
         [ForeignKey("SponsorId")]
         [InverseProperty("Ecuries")]
         public virtual Sponsor? Sponsor { get; set; }
+        [InverseProperty("Ecurie")]
+        public virtual ICollection<Image> Images { get; set; }
         [InverseProperty("Ecurie")]
         public virtual ICollection<Participation> Participations { get; set; }
         [InverseProperty("Ecurie")]

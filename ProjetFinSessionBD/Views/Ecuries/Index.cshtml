@@ -14,6 +14,10 @@
 <table class="table">
     <thead>
         <tr>
+
+            <th>
+               Logo
+            </th>
             <th>
                 Nom d'écuries
             </th>
@@ -30,6 +34,9 @@
         @foreach (var ecurie in Model)
         {
             <tr>
+                <td>
+                    <img alt="@(ecurie.image)" src="@(ecurie.ImageUrl)" />
+                </td>
                 <td>
                     @ecurie.Name
                 </td>

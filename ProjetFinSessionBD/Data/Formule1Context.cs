@@ -24,6 +24,7 @@ namespace ProjetFinSessionBD.Data
         public virtual DbSet<Evenement> Evenements { get; set; } = null!;
         public virtual DbSet<EvenementSpecial> EvenementSpecials { get; set; } = null!;
         public virtual DbSet<GrandPrix> GrandPrixes { get; set; } = null!;
+        public virtual DbSet<Image> Images { get; set; } = null!;
         public virtual DbSet<Participation> Participations { get; set; } = null!;
         public virtual DbSet<Pilote> Pilotes { get; set; } = null!;
         public virtual DbSet<Sponsor> Sponsors { get; set; } = null!;
@@ -73,6 +74,17 @@ namespace ProjetFinSessionBD.Data
             {
                 entity.HasKey(e => e.EvenSpecialId)
                     .HasName("PK_Evenement_EvenementSpecial");
+            });
+
+            modelBuilder.Entity<Image>(entity =>
+            {
+                entity.Property(e => e.Identifiant).HasDefaultValueSql("(newid())");
+
+                entity.HasOne(d => d.Ecurie)
+                    .WithMany(p => p.Images)
+                    .HasForeignKey(d => d.EcurieId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Image_EcurieID");
             });
 
             modelBuilder.Entity<Participation>(entity =>
