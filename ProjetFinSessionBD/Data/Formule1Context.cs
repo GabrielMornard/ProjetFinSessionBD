@@ -19,6 +19,7 @@ namespace ProjetFinSessionBD.Data
 
         public virtual DbSet<Changelog> Changelogs { get; set; } = null!;
         public virtual DbSet<Circuit> Circuits { get; set; } = null!;
+        public virtual DbSet<CircuitEvenement> CircuitEvenements { get; set; } = null!;
         public virtual DbSet<Ecurie> Ecuries { get; set; } = null!;
         public virtual DbSet<Evenement> Evenements { get; set; } = null!;
         public virtual DbSet<EvenementSpecial> EvenementSpecials { get; set; } = null!;

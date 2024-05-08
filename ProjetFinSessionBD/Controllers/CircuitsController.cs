@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using ProjetFinSessionBD.Data;
 using ProjetFinSessionBD.Models;
+using ProjetFinSessionBD.Models.ViewModel;
 
 namespace ProjetFinSessionBD.Controllers
 {
@@ -35,14 +37,12 @@ namespace ProjetFinSessionBD.Controllers
                 return NotFound();
             }
 
-            var circuit = await _context.Circuits
-                .FirstOrDefaultAsync(m => m.CircuitId == id);
-            if (circuit == null)
-            {
-                return NotFound();
-            }
+            string query = "EXEC Evenements.usp_CircuitParEvenement @CircuitID";
 
-            return View(circuit);
+            List<CircuitEvenement> info = await _context.CircuitEvenements.FromSqlRaw(query, new SqlParameter("@CircuitID", id)).ToListAsync();
+
+            return View(info);
+
         }
 
         // GET: Circuits/Create
