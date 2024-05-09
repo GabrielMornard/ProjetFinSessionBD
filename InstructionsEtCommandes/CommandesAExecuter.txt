@@ -2,7 +2,7 @@ Commande Evolve:
 
 evolve migrate sqlserver -c "Server=.\SQLEXPRESS;Initial Catalog=Formule1;Integrated Security=True;
 Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False"
--s Evenements -s Participations --target-version X.X
+-s Evenements -s Participations -s Images --target-version X.X
 
 Commande Scaffold:
 

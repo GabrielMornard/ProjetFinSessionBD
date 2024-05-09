@@ -41,9 +41,9 @@ namespace ProjetFinSessionBD.Controllers
                     Name = ecurie.Nom,
                     Victoires = ecurie.Victoire,
                     pilotes = new List<PiloteViewModel>(),
-                    //image = _context.Images.Where(x => x.ImageId == ecurie.EcurieId)
-                    //                .Select(x => x.FichierImage == null ? null : $"data:image/png;base64,{Convert.ToBase64String(x.FichierImage)}")
-                    //                .FirstOrDefault()
+                    ImageUrl = _context.Images.Where(x => x.EcurieId == ecurie.EcurieId)
+                                    .Select(x => x.FichierImage == null ? null : $"data:image/png;base64,{Convert.ToBase64String(x.FichierImage)}")
+                                    .FirstOrDefault()
                 };
                 var pilotes = await _context.Pilotes.Where(x => x.EcurieId == ecurie.EcurieId).ToListAsync();
 
