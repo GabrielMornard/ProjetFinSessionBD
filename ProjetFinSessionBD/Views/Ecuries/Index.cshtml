@@ -1,4 +1,4 @@
-﻿@model List<ProjetFinSessionBD.Models.ViewModel.EcurieViewModel>
+﻿@model ProjetFinSessionBD.Models.ViewModel.FiltreVM
 
 @{
     ViewData["Title"] = "Index";
@@ -12,6 +12,35 @@
 </p>
 
 <table class="table">
+    <form asp-action="Index">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <!-- Chercher Ecurie par son pseudo -->
+        <div class="form-group col-6">
+            <label asp-for="Name" class="control-label"></label>
+            <div>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <!-- Chercher Par le nombre de victoire minimum -->
+        <div class="form-group col-6">
+            <label asp-for="VictoiresMinimum" class="control-label"></label>
+            <div>
+                <input asp-for="VictoiresMinimum" class="form-control" />
+                <span asp-validation-for="VictoiresMinimum" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row align-items-end">
+            <div class="form-group col-auto">
+                <div class="col-md-offset-2">
+                    <button type="submit" class="btn btn-light">Filtrer</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+    </div>
     <thead>
         <tr>
 
@@ -31,7 +60,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var ecurie in Model)
+        @foreach (var ecurie in Model.Ecurie)
         {
             <tr>
                 <td>

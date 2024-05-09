@@ -21,13 +21,23 @@ namespace ProjetFinSessionBD.Controllers
         }
 
         // GET: Ecuries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(FiltreVM fvm)
         {
             var ecuries = await _context.Ecuries.ToListAsync();
 
             if (ecuries == null)
             {
                 return NotFound("Aucune Écurie de trouver!");
+            }
+
+            if (fvm.Name != null) 
+            {
+                ecuries = ecuries.Where(x => x.Nom == fvm.Name).ToList();
+            }
+
+            if (fvm.VictoiresMinimum != null)
+            {
+                ecuries = ecuries.Where(x => x.Victoire >= fvm.VictoiresMinimum).ToList();
             }
 
             var ecurieViewModel = new List<EcurieViewModel>();
@@ -62,7 +72,9 @@ namespace ProjetFinSessionBD.Controllers
                 ecurieViewModel.Add(ecurieVM);
             }
 
-            return View(ecurieViewModel);
+            fvm.Ecurie = ecurieViewModel;
+
+            return View(fvm);
         }
 
         //GET : Ecuries/TousLesGagants
