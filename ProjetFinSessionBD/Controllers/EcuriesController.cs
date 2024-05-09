@@ -94,7 +94,6 @@ namespace ProjetFinSessionBD.Controllers
         // GET: Ecuries/Create
         public IActionResult Create()
         {
-            ViewData["SponsorId"] = new SelectList(_context.Sponsors, "SponsorId", "SponsorId");
             return View();
         }
 
@@ -103,16 +102,39 @@ namespace ProjetFinSessionBD.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EcurieId,Nom,Victoire,SponsorId")] Ecurie ecurie)
+        public async Task<IActionResult> Create(EcurieUploadVM ecurieVM)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(ecurie);
+                Ecurie newEcurie = new Ecurie
+                {
+                    Nom = ecurieVM.Name,
+                    Victoire = ecurieVM.Victoires,
+                };
+                _context.Add(newEcurie);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                if (ecurieVM.FormFile != null && ecurieVM.FormFile.Length >= 0) 
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await ecurieVM.FormFile.CopyToAsync(memoryStream);
+                        byte[] fichierImage = memoryStream.ToArray();
+
+                        Image newImage = new Image
+                        {
+                            EcurieId = newEcurie.EcurieId,
+                            FichierImage = fichierImage
+                        };
+
+                        _context.Add(newImage);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
-            ViewData["SponsorId"] = new SelectList(_context.Sponsors, "SponsorId", "SponsorId", ecurie.SponsorId);
-            return View(ecurie);
+            return View();
         }
 
         // GET: Ecuries/Edit/5
